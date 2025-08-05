@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './Navbar';
@@ -9,11 +9,19 @@ import Scorecard from './Scorecard';
 import Handicap from './Handicap';
 
 function App() {
-  // Shared state across pages
-  const [rounds, setRounds] = useState([
-    { title: 'Countryside', score: 88 },
-    { title: 'Arboretum Golf Club', score: 91 }
-  ]);
+  const [rounds, setRounds] = useState(() => {
+    const storedRounds = localStorage.getItem('rounds');
+    return storedRounds
+      ? JSON.parse(storedRounds)
+      : [
+          { title: 'Countryside', score: 88 },
+          { title: 'Arboretum Golf Club', score: 91 },
+        ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('rounds', JSON.stringify(rounds));
+  }, [rounds]);
 
   return (
     <div>
